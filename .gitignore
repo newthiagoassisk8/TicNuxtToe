@@ -1,24 +1,25 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
+# Created by https://www.toptal.com/developers/gitignore/api/nuxt,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=nuxt,visualstudiocode
 
-# Node dependencies
-node_modules
+#!! ERROR: nuxt is undefined. Use list command to see defined gitignore types !!#
 
-# Logs
-logs
-*.log
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# Misc
-.DS_Store
-.fleet
-.idea
+# Local History for Visual Studio Code
+.history/
 
-# Local env files
-.env
-.env.*
-!.env.example
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/nuxt,visualstudiocode
