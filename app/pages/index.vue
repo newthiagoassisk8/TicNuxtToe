@@ -9,6 +9,14 @@
             <!-- Área do jogo -->
             <div class="bg-gray-800/50 border w-80 border-gray-700 rounded-2xl p-6">
                 <p class="text-lg font-semibold mb-4">Next player: {{ icon }}</p>
+                <p class="text-lg font-semibold mb-4">
+                    {{ squares }}
+                    <!-- {{selectedCounter}} -->
+                    <!-- {{playing}} -->
+                </p>
+
+                Counter: {{ counter }}
+                <button class="text-lg font-semibold mb-4">+</button>
 
                 <!-- Tabuleiro 3x3 -->
                 <div class="grid grid-cols-3 gap-2">
@@ -18,7 +26,7 @@
                         :key="squareIndex"
                         class="aspect-square bg-gray-700 hover:bg-gray-600 rounded-xl text-3xl font-bold flex items-center justify-center transition"
                     >
-                        {{ square}}
+                        {{ square }}
                     </button>
                 </div>
             </div>
@@ -76,30 +84,51 @@
 </template>
 <!-- TODO: Lógica de identificar o vencedor -->
 <script setup lang="js">
-const icons = ['X', '0'];
+const icons = ['X', 'O'];
 const turn = ref(0);
+import { showToast } from '~/utils/toast';
+
+function anunciarVencedor(vencedor) {
+    showToast(`🏆 ${vencedor} venceu a partida!`);
+}
+const winningPossibilities = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
+
 const icon = computed(() => icons[turn.value]);
 
-
-const squares = ref([
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-  '',
-]);
+const squares = ref(['', '', '', '', '', '', '', '', '']);
+const selectedCounter = computed(() => squares.value.filter((i) => i).length);
+const playing = computed(() => Boolean(selectedCounter.value));
 
 const markSquare = (position) => {
-  if (typeof squares.value[position] === 'undefined' || squares.value[position]) {
-    return
-  }
+    if (typeof squares.value[position] === 'undefined' || squares.value[position]) {
+        return;
+    }
     squares.value[position] = icon.value;
-    console.log('markSquare' , position)
+
+    console.log([...squares.value]);
     turn.value = turn.value ? 0 : 1;
+    let winner = checkWinner([...squares.value], winningPossibilities);
+    if (winner) {
+        anunciarVencedor(winner);
+    }
 };
 
+const checkWinner = (ticTacToeBoard, winningCombos) => {
+    for (let [a, b, c] of winningCombos) {
+        if (ticTacToeBoard[a] && ticTacToeBoard[a] === ticTacToeBoard[b] && ticTacToeBoard[a] === ticTacToeBoard[c]) {
+            console.log(ticTacToeBoard[a]);
+            return ticTacToeBoard[a];
+        }
+    }
+    return null;
+};
 </script>
