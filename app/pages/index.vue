@@ -9,30 +9,38 @@
             <!-- Área do jogo -->
             <div class="bg-gray-800/50 border w-80 border-gray-700 rounded-2xl p-6">
                 <p class="text-lg font-semibold mb-4">Next player: {{ icon }}</p>
-                <p class="text-lg font-semibold mb-4">
-                    {{ squares }}
-                    <!-- {{selectedCounter}} -->
-                    <!-- {{playing}} -->
-                </p>
 
-                Counter: {{ counter }}
-                <button class="text-lg font-semibold mb-4">+</button>
-
+<!--  -->
                 <!-- Tabuleiro 3x3 -->
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-3 gap-2 text-6xl">
                     <button
                         v-for="(square, squareIndex) in squares"
                         @click.prevent.stop="markSquare(squareIndex)"
                         :key="squareIndex"
-                        class="aspect-square bg-gray-700 hover:bg-gray-600 rounded-xl text-3xl font-bold flex items-center justify-center transition"
+                        class="aspect-square bg-gray-700 hover:bg-gray-600 rounded-xl font-bold flex items-center justify-center transition"
+                        v-bind:class="[
+                            // square ? 'text-3xl' : 'text-xs',
+                            // !square ? 'hover:text-2xl' : '',
+                            {
+                                'hover:text-2xl': !square,
+                                'text-3xl': square,
+                                'text-xs': !square,
+                                abc:true,
+                                xyz:false,
+                                'text-red-500':!square && (squareIndex % 2) !== 0,
+                                'text-green-500':!square && (squareIndex % 2) === 0,
+                                'minha-classe':12345,
+                            }
+                        ]"
+                        v-bind:abc="square ? 'text-3xl' : 'text-xs'"
                     >
-                        {{ square }}
+                        {{ square || squareIndex }}
                     </button>
                 </div>
             </div>
 
             <!-- Painel lateral -->
-            <div class="bg-gray-800/50 border w-80 border-gray-700 rounded-2xl p-6 w-full max-w-sm">
+            <div class="bg-gray-800/50 border md:w-80 border-gray-700 rounded-2xl p-6 w-full max-w-sm">
                 <h2 class="text-lg font-semibold mb-4">Game Settings</h2>
 
                 <!-- Modo de jogo -->
@@ -82,13 +90,13 @@
         </div>
     </div>
 </template>
-<!-- TODO: Lógica de identificar o vencedor -->
+
 <script setup lang="js">
 const icons = ['X', 'O'];
 const turn = ref(0);
 import { showToast } from '~/utils/toast';
 
-function anunciarVencedor(vencedor) {
+function announceWinner(vencedor) {
     showToast(`🏆 ${vencedor} venceu a partida!`);
 }
 const winningPossibilities = [
@@ -106,7 +114,7 @@ const icon = computed(() => icons[turn.value]);
 
 const squares = ref(['', '', '', '', '', '', '', '', '']);
 const selectedCounter = computed(() => squares.value.filter((i) => i).length);
-const playing = computed(() => Boolean(selectedCounter.value));
+
 
 const markSquare = (position) => {
     if (typeof squares.value[position] === 'undefined' || squares.value[position]) {
@@ -118,7 +126,7 @@ const markSquare = (position) => {
     turn.value = turn.value ? 0 : 1;
     let winner = checkWinner([...squares.value], winningPossibilities);
     if (winner) {
-        anunciarVencedor(winner);
+        announceWinner(winner);
     }
 };
 
